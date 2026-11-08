@@ -5,24 +5,24 @@ from telebot import types
 BOT_TOKEN = "8606529033:AAGIpCdlt74w3kvVUyPHZ2P_aBcTxHjPzcs"
 bot = telebot.TeleBot(BOT_TOKEN, parse_mode='HTML')
 
-# معلومات المطور والقناة الجديدة
+# معلومات المطور والقناة الجديدة الخاصة بك
 DEVELOPER_USERNAME = "@Murtadh_a"
 CHANNEL_URL = "https://t.me/mortd8"
 
-# رابط الصورة الاحترافية الجديدة التي اخترتها
-WELCOME_IMAGE_URL = "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe" # يمكنك استبداله برابط صورتك المباشر
+# رابط الصورة الترحيبية
+WELCOME_IMAGE_URL = "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe"
 
 @bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
     user_name = message.from_user.first_name
     caption = (
-        f"<b>أهلاً بك يا أسطورة {user_name} في بوت التحميل الصاروخي!</b> ⚡️\n\n"
-        f"• أرسل لي أي فيديو وسيتم معالجته وفحصه فوراً.\n"
+        f"<b>أهلاً بك يا أسطورة {user_name} في بوت التحميل!</b> 🚀\n\n"
+        f"• أرسل لي أي رابط فيديو وسأقوم بتحميله لك بنجاح.\n"
         f"• البوت يعمل بأقصى سرعة على مدار 24 ساعة.\n\n"
         f"👨‍💻 <b>المطور:</b> {DEVELOPER_USERNAME}"
     )
     
-    # زر قناة المطور بالرابط الجديد
+    # زر قناة المطور الجديدة
     markup = types.InlineKeyboardMarkup()
     btn_channel = types.InlineKeyboardButton("قناة المطور 🌐", url=CHANNEL_URL)
     markup.add(btn_channel)
