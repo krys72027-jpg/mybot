@@ -1,46 +1,62 @@
 import telebot
+from telebot import types
 
-# ضع توكن البوت هنا أو استبدله بمتغير البيئة الخاص بك
+# توكن البوت الخاص بك
 BOT_TOKEN = "8606529033:AAGIpCdlt74w3kvVUyPHZ2P_aBcTxHjPzcs"
-bot = telebot.TeleBot(BOT_TOKEN)
+bot = telebot.TeleBot(BOT_TOKEN, parse_mode='HTML')
 
-# معرف المطور المطلوب إظهاره
+# معلومات المطور والقناة الجديدة
 DEVELOPER_USERNAME = "@Murtadh_a"
+CHANNEL_URL = "https://t.me/mortd8"
 
-# رابط صورة الترحيب (يمكنك استبداله برابط أي صورة مباشرة تريد إرسالها مع المحادثة)
-WELCOME_IMAGE_URL = "https://cdn.discordapp.com/attachments/1133497000134987838/1569032188865945741/1793984341954.jpg?ex=6af1fa99&is=6af0a919&hm=4268ddfcd2f648307dc6e6f9193d054ac86f0ed6c6d119ca31f5152d0a94eebc&"
+# رابط الصورة الاحترافية الجديدة التي اخترتها
+WELCOME_IMAGE_URL = "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe" # يمكنك استبداله برابط صورتك المباشر
 
-@bot.message_handler(commands=['start'])
+@bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
     user_name = message.from_user.first_name
     caption = (
-        f"مرحباً بك {user_name} في بوت التحميل الخاص بنا!\n"
-        f"أرسل لي أي فيديو وسأقوم بتحميله لك مع معلوماتك.\n\n"
-        f"👨‍💻 المطور: {DEVELOPER_USERNAME}"
+        f"<b>أهلاً بك يا أسطورة {user_name} في بوت التحميل الصاروخي!</b> ⚡️\n\n"
+        f"• أرسل لي أي فيديو وسيتم معالجته وفحصه فوراً.\n"
+        f"• البوت يعمل بأقصى سرعة على مدار 24 ساعة.\n\n"
+        f"👨‍💻 <b>المطور:</b> {DEVELOPER_USERNAME}"
     )
-    # إرسال صورة مع نص الترحيب
+    
+    # زر قناة المطور بالرابط الجديد
+    markup = types.InlineKeyboardMarkup()
+    btn_channel = types.InlineKeyboardButton("قناة المطور 🌐", url=CHANNEL_URL)
+    markup.add(btn_channel)
+
     bot.send_photo(
-        message.chat.id, 
-        photo=WELCOME_IMAGE_URL, 
-        caption=caption
+        chat_id=message.chat.id,
+        photo=WELCOME_IMAGE_URL,
+        caption=caption,
+        reply_markup=markup
     )
 
 @bot.message_handler(content_types=['video'])
 def handle_video(message):
-    user_username = f"@{message.from_user.username}" if message.from_user.username else f"ID: {message.from_user.id}"
+    user = message.from_user
+    user_identifier = f"@{user.username}" if user.username else f"ID: {user.id}"
     
     caption = (
-        f"📥 تم استلام الفيديو بنجاح!\n"
-        f"👤 بواسطة المستخدم: {user_username}\n\n"
-        f"👨‍💻 المطور: {DEVELOPER_USERNAME}"
+        f"✨ <b>تم التحميل بنجاح بواسطة البوت!</b>\n\n"
+        f"👤 <b>بواسطة:</b> {user_identifier}\n"
+        f"👨‍💻 <b>المطور:</b> {DEVELOPER_USERNAME}"
     )
     
-    # إعادة إرسال الفيديو مع اسم المستخدم ومعلومات المطور
     bot.send_video(
-        message.chat.id, 
-        message.video.file_id, 
+        chat_id=message.chat.id,
+        data=message.video.file_id,
         caption=caption
     )
 
-# تشغيل البوت
-bot.infinity_polling()
+@bot.message_handler(func=lambda message: True)
+def handle_other(message):
+    bot.reply_to(
+        message, 
+        f"أهلاً بك! يرجى إرسال فيديو للتحميل، أو اضغط على /start للبدء.\n\n👨‍💻 المطور: {DEVELOPER_USERNAME}"
+    )
+
+if __name__ == "__main__":
+    bot.infinity_polling(skip_pending=True)
